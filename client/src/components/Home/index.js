@@ -6,6 +6,8 @@ import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
+import { CLIENT_REMEMBER_OPTIONS } from 'mysql/lib/protocol/constants/client';
+import { blue } from '@material-ui/core/colors';
 
 
 //Dev mode
@@ -47,14 +49,33 @@ const styles = theme => ({
   },
   mainMessage: {
     opacity: opacityValue,
+    marginLeft: theme.spacing(10),
+    [theme.breakpoints.down('xs')]: {
+     marginLeft: theme.spacing(4),
+    },
+
+    marginRight: theme.spacing(10),
+    [theme.breakpoints.down('xs')]: {
+     marginRight: theme.spacing(4),
+    },
+  },
+
+  inputFeilds: {
+    margin: 10,
+    backgroundColor: '#e3f2fd',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+  },
+
+  input:{
+    margin:10
+    
   },
 
   mainMessageContainer: {
     marginTop: "20vh",
-    marginLeft: theme.spacing(20),
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: theme.spacing(4),
-    },
   },
   paper: {
     overflow: "hidden",
@@ -119,9 +140,7 @@ class Home extends Component {
     const mainMessage = (
       <Grid
         container
-        spacing={0}
-        direction="column"
-        justify="flex-start"
+        justify="center"
         alignItems="flex-start"
         style={{ minHeight: '100vh' }}
         className={classes.mainMessageContainer}
@@ -135,7 +154,7 @@ class Home extends Component {
           >
             {this.state.mode === 0 ? (
               <React.Fragment>
-                Welcome to MSci245!
+                Welcome to Calum's IMDB App
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -143,8 +162,39 @@ class Home extends Component {
               </React.Fragment>
             )}
           </Typography>
-
+          <div className={classes.inputFeilds}>
+            <input
+              className={classes.input}
+              name="UserName"
+              type="text"
+            />
+            <input
+              className={classes.input}
+              name="Password"
+              type="text"
+            />
+          </div>
+          
         </Grid>
+        {/* <Grid item>
+
+        <Typography
+            variant={"h3"}
+            className={classes.mainMessage}
+            align="flex-start"
+            >
+            {this.state.mode === 0 ? (
+              <React.Fragment>
+                Welcome to Calum's IMDB App
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                Welcome back!
+              </React.Fragment>
+            )}
+        </Typography>
+
+        </Grid> */}
       </Grid>
     )
 
