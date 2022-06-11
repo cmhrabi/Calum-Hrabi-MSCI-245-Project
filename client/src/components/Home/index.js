@@ -8,6 +8,9 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import { CLIENT_REMEMBER_OPTIONS } from 'mysql/lib/protocol/constants/client';
 import { blue } from '@material-ui/core/colors';
+import Container from '@material-ui/core/Container';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button'
 
 
 //Dev mode
@@ -22,19 +25,19 @@ const serverURL = ""; //enable for dev mode
 
 const fetch = require("node-fetch");
 
-const opacityValue = 0.9;
+const opacityValue = 1;
 
 const theme = createTheme({
   palette: {
-    type: 'dark',
+    type: 'light',
     background: {
       default: "#000000"
     },
     primary: {
-      main: "#52f1ff",
+      main: "#000000",
     },
     secondary: {
-      main: "#b552f7",
+      main: "#000000",
     },
   },
 });
@@ -42,49 +45,50 @@ const theme = createTheme({
 const styles = theme => ({
   root: {
     body: {
-      backgroundColor: "#000000",
+      backgroundColor: "#ffffff",
       opacity: opacityValue,
       overflow: "hidden",
     },
   },
+
   mainMessage: {
     opacity: opacityValue,
-    marginLeft: theme.spacing(10),
-    [theme.breakpoints.down('xs')]: {
-     marginLeft: theme.spacing(4),
-    },
-
-    marginRight: theme.spacing(10),
-    [theme.breakpoints.down('xs')]: {
-     marginRight: theme.spacing(4),
-    },
+    justify: 'center',
+    alignItems: 'center',
+    color: '#42a5f5'
   },
 
   inputFeilds: {
-    margin: 10,
-    backgroundColor: '#e3f2fd',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
+    borderRadius: 5,
+    maxWidth: '40%',
+    border: 1
   },
 
   input:{
-    margin:10
-    
+    margin:10,
   },
 
   mainMessageContainer: {
     marginTop: "20vh",
+    maxWidth: '100%'
   },
+
   paper: {
     overflow: "hidden",
+    color: "white",
+    margin: "10"
   },
+
   message: {
     opacity: opacityValue,
-    maxWidth: 250,
+    maxWidth: "50%",
     paddingBottom: theme.spacing(2),
   },
+
+  login: {
+    marginLeft: 20,
+    color: '#42a5f5'
+  }
 
 });
 
@@ -138,19 +142,19 @@ class Home extends Component {
 
 
     const mainMessage = (
-      <Grid
-        container
+      <Container
         justify="center"
-        alignItems="flex-start"
-        style={{ minHeight: '100vh' }}
+        alignItems="center"
+        style={{ minHeight: '20vh' }}
         className={classes.mainMessageContainer}
+        maxWidth='sm'
       >
-        <Grid item>
+        <Container item>
 
           <Typography
             variant={"h3"}
             className={classes.mainMessage}
-            align="flex-start"
+            align="center"
           >
             {this.state.mode === 0 ? (
               <React.Fragment>
@@ -162,20 +166,7 @@ class Home extends Component {
               </React.Fragment>
             )}
           </Typography>
-          <div className={classes.inputFeilds}>
-            <input
-              className={classes.input}
-              name="UserName"
-              type="text"
-            />
-            <input
-              className={classes.input}
-              name="Password"
-              type="text"
-            />
-          </div>
-          
-        </Grid>
+        </Container>
         {/* <Grid item>
 
         <Typography
@@ -195,8 +186,53 @@ class Home extends Component {
         </Typography>
 
         </Grid> */}
-      </Grid>
+      </Container>
     )
+
+    const inputButtons = (
+      <Container
+      justify="center"
+      alignItems="left"
+      style={{ minHeight: '75vh'}}
+      className={classes.inputFeilds}
+      maxWidth='sm'
+      >
+        <Container item
+        >
+        <Typography
+            variant={'h5'}
+            className={classes.login}
+        >
+          <React.Fragment>
+                Login
+          </React.Fragment>
+        </Typography>
+
+        </Container>
+        <Container item
+          align="center"
+          justify="center"
+        >
+          <TextField id="outlined-basic" label="Email" variant="outlined"   className={classes.input}/>
+          <TextField
+            id="outlined-password-input"
+            label="Password"
+            type="password"
+            variant="outlined"
+            autoComplete="current-password"
+            className={classes.input}
+          />
+        </Container>
+        <Container item
+        align="center"
+        justify="center"
+        >
+          <Button variant="contained">Submit</Button>
+        </Container>
+      </Container>
+    )
+
+    
 
 
     return (
@@ -207,8 +243,8 @@ class Home extends Component {
             className={classes.paper}
           >
             {mainMessage}
+            {inputButtons}
           </Paper>
-
         </div>
       </MuiThemeProvider>
     );
