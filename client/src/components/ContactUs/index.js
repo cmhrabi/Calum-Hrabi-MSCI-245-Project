@@ -150,7 +150,7 @@ class ContactUs extends Component {
             className={classes.mainMessage}
             align="center"
           >
-            App by: Calumski
+            App by: Calum Hrabi
           </Typography>
         </Container>
         {/* <Grid item>
