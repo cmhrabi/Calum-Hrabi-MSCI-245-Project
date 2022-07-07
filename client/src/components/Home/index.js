@@ -23,7 +23,7 @@ import MuiAlert from '@mui/material/Alert'
 import { maxWidth } from '@mui/system';
 
 //Dev mode
-const serverURL = ""; //enable for dev mode
+const serverURL = " http://ov-research-4.uwaterloo.ca:3097"; //enable for dev mode
 
 //Deployment mode instructions
 //const serverURL = "http://ov-research-4.uwaterloo.ca:PORT"; //enable for deployed mode; Change PORT to the port number given to you;
