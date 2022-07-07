@@ -4,7 +4,6 @@ const fetch = require('node-fetch');
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-
 const { response } = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
@@ -13,9 +12,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
-
 app.post('/api/loadUserSettings', (req, res) => {
-
 	let connection = mysql.createConnection(config);
 	let userID = req.body.userID;
 
@@ -33,10 +30,52 @@ app.post('/api/loadUserSettings', (req, res) => {
 		//let obj = JSON.parse(string);
 		res.send({ express: string });
 	});
+
 	connection.end();
 });
 
+app.get('/api/getMovies', (req, res) => {
+	let connection = mysql.createConnection(config);
 
+	let sql = 'SELECT * FROM movies';
+	console.log(sql);
+
+	connection.query(sql, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+		let string = JSON.stringify(results);
+		res.send({express: string });
+	});
+
+	connection.end
+});
+
+app.post('/api/addReview', (req, res) => {
+	let connection = mysql.createConnection(config);
+
+	let reviewTitle = req.body.reviewTitle
+	let reviewContent = req.body.reviewContent
+	let reviewScore = req.body.reviewScore
+	let movieID = req.body.movieID
+	console.log("It is here")
+
+	let sql = 'INSERT INTO Review (reviewTitle, reviewContent, reviewScore, movieID, userID) VALUES (?, ?, ?, ?, 1)';
+	console.log(sql);
+	let data = [reviewTitle, reviewContent, reviewScore, movieID];
+	console.log(data);
+
+	connection.query(sql, data, (error, results, fields) => {
+		if(error) {
+			return console.error(error.message);
+		}
+
+		let string = JSON.stringify(results);
+		res.send({ express: string });
+	});
+
+	connection.end
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
 //app.listen(port, '129.97.25.211'); //for the deployed version, specify the IP address of the server

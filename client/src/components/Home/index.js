@@ -322,7 +322,6 @@ class MovieSelection extends Component{
   constructor(props){
     super(props);
     this.state ={
-      movies: props.movies,
       selectMovie: ""
     }
 
@@ -350,8 +349,8 @@ class MovieSelection extends Component{
     onChange={this.handleChange}
   >
     <MenuItem value={-1}>None</MenuItem>
-    {this.state.movies.map((movie, index) => (
-      <MenuItem value={index}>{movie.name}</MenuItem>
+    {this.props.movies.map((movie, index) => (
+      <MenuItem value={movie.id}>{movie.name}</MenuItem>
     ))}
     </Select>
     </div>
@@ -410,47 +409,7 @@ class Review extends Component{
     this.state = {
       userID: 1,
       mode: 0,
-      movies: [
-         {
-           "name": "The Big Short",
-           "logo": "https://m.media-amazon.com/images/M/MV5BNDc4MThhN2EtZjMzNC00ZDJmLThiZTgtNThlY2UxZWMzNjdkXkEyXkFqcGdeQXVyNDk3NzU2MTQ@._V1_FMjpg_UX1000_.jpg",
-           "reviews": {
-
-           }
-          },
-       
-         {
-           "name": "The Batman",
-           "logo": "https://m.media-amazon.com/images/M/MV5BMDdmMTBiNTYtMDIzNi00NGVlLWIzMDYtZTk3MTQ3NGQxZGEwXkEyXkFqcGdeQXVyMzMwOTU5MDk@._V1_.jpg",
-           "reviews": {
-
-          }
-          },
-       
-         {
-           "name": "Parasite",
-           "logo": "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_.jpg",
-           "reviews": {
-
-          }
-         },
-
-         {
-          "name": "The City of God",
-          "logo": "https://m.media-amazon.com/images/M/MV5BOTMwYjc5ZmItYTFjZC00ZGQ3LTlkNTMtMjZiNTZlMWQzNzI5XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
-          "reviews": {
-
-          }
-        },
-
-        {
-          "name": "Dune",
-          "logo": "https://m.media-amazon.com/images/M/MV5BN2FjNmEyNWMtYzM0ZS00NjIyLTg5YzYtYThlMGVjNzE1OGViXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_FMjpg_UX1000_.jpg",
-          "reviews": {
-
-          }
-        }
-       ],
+      movies: [],
       errorList: [
         "Please enter your Movie title",
         "Please enter your review title",
@@ -460,7 +419,7 @@ class Review extends Component{
 
       errorIndex: -1,
       sbOpen: false,
-      selectedMovie: -1,
+      selectedMovie: "",
       enteredTitle: "",
       enteredReview: "",
       selectedRating: -1,
@@ -524,19 +483,8 @@ class Review extends Component{
     
 
     else{
-
-    this.setState(prevState => ({
-
-      movies: prevState.movies.map((movies, index) => (
-      
-        index === this.state.selectedMovie ? { ...movies, reviews: {...movies.reviews, [title]: {"body": body, "rating": rating}}  }: movies
-      ))
-
-    }))
-    console.log(this.state.enteredReview)
-      console.log(rating)
-
-    this.setState({sbOpen: true})
+      this.callApiAddReview()
+      this.setState({sbOpen: true})
   }
 
   }
@@ -548,6 +496,61 @@ class Review extends Component{
   sbERHandleClose(event, reason) {
     this.setState({sbEROpen: false});
   };
+  
+  setMovies = (moviesList) => {
+    this.setState({movies: moviesList});
+  }
+
+  callApiAddReview = async () => {
+    const url = serverURL + "/api/addReview";
+    console.log(url);
+    const response = await fetch(url, {
+    method: "POST",
+    headers: {
+    "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      reviewTitle: this.state.enteredTitle,
+      reviewContent: this.state.enteredReview,
+      reviewScore: this.state.selectedRating,
+      movieID: this.state.selectedMovie
+    })
+    });
+    
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    console.log("Reviews: ", body);
+    return body;
+  }
+
+  callApiGetMovies = async () => {
+    const url = serverURL + "/api/getMovies";
+    console.log(url);
+    const response = await fetch(url, {
+    method: "GET",
+    headers: {
+    "Content-Type": "application/json",
+    }
+    });
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    console.log("Movies: ", body);
+    return body;
+    };
+
+    loadMovies = () => {
+      this.callApiGetMovies().then((res) => {
+        var parsed = JSON.parse(res.express);
+        console.log(parsed)
+        this.setState({movies: parsed});
+      })
+
+      
+    };
+
+    componentDidMount() {
+      this.loadMovies()
+    };
 
   render() {
     const { classes } = this.props;
@@ -606,7 +609,7 @@ class Review extends Component{
               >
                 {movies.name}
               </Typography>
-              <img className={classes.movieImg} src={movies.logo}  align="center" width="200" height="300"/>
+              {/* <img className={classes.movieImg} src={movies.logo}  align="center" width="200" height="300"/>
               {Object.keys(movies.reviews).map(review => (
               <React.Fragment>
                 <Typography
@@ -626,7 +629,7 @@ class Review extends Component{
                       {movies.reviews[review].body}
                 </Typography>
               </React.Fragment>
-              ))}
+              ))} */}
             </Grid>
           ))}
       </Grid>
