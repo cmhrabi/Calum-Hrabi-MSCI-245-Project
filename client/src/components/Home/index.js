@@ -21,9 +21,11 @@ import FormControlLabel  from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@mui/material/Alert'
 import { maxWidth } from '@mui/system';
+import FormLabel from '@material-ui/core/FormLabel';
 
 //Dev mode
-const serverURL = " http://ov-research-4.uwaterloo.ca:3097"; //enable for dev mode
+//const serverURL = " http://ov-research-4.uwaterloo.ca:3097"; //enable for dev mode
+const serverURL ="ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3097";
 
 //Deployment mode instructions
 //const serverURL = "http://ov-research-4.uwaterloo.ca:PORT"; //enable for deployed mode; Change PORT to the port number given to you;
@@ -49,6 +51,9 @@ const theme = createTheme({
     secondary: {
       main: "#000000",
     },
+    warning:{
+      main: "#880808"
+    }
   },
 });
 
@@ -135,6 +140,10 @@ const styles = theme => ({
 
   reviewMargin: {
     margin: 10
+  },
+
+  ratingError: {
+    color: 'red'
   }
 
 });
@@ -213,7 +222,7 @@ class ReviewTitle extends Component {
     const { classes } = this.props;
 
     return (
-      <TextField id="outlined-basic" label="Review Name" variant="outlined" onChange={this.handleChange} className={classes.input}/>
+      <TextField id="outlined-basic" label="Review Name" variant="outlined" onChange={this.handleChange} className={classes.input} error={this.props.error}/>
     );
   }
 }
@@ -248,6 +257,7 @@ class ReviewBody extends Component {
           }}
           helperText="Must be less than 200 Characters." 
           onChange={this.handleChange}
+          error={this.props.error}
         />    
       );
   }
@@ -276,11 +286,13 @@ class ReviewRating extends Component {
 
     return (
     <MuiThemeProvider theme={theme}>
+      <FormLabel id="demo-customized-radios" className={classes.ratingError}>{this.props.error}</FormLabel>
         <RadioGroup
         row
         name="position"
         onChange={this.handleChange}
         className={classes.input}
+        color={this.props.error}
       >
         <FormControlLabel
           value="1"
@@ -313,6 +325,7 @@ class ReviewRating extends Component {
           labelPlacement="top"
         />
       </RadioGroup>
+      <FormLabel/>
     </MuiThemeProvider>    
       );
   }
@@ -347,10 +360,11 @@ class MovieSelection extends Component{
     value={this.state.selectMovie}
     label="Movies"
     onChange={this.handleChange}
+    error={this.props.error}
   >
     <MenuItem value={-1}>None</MenuItem>
     {this.props.movies.map((movie, index) => (
-      <MenuItem value={movie.id}>{movie.name}</MenuItem>
+      <MenuItem value={movie}>{movie.name}</MenuItem>
     ))}
     </Select>
     </div>
@@ -419,11 +433,14 @@ class Review extends Component{
 
       errorIndex: -1,
       sbOpen: false,
-      selectedMovie: "",
+      selectedMovie: -1,
       enteredTitle: "",
       enteredReview: "",
       selectedRating: -1,
-      sbEROpen: false,
+        erMT: false,
+        erRT: false,
+        erRC: false,
+        erRR: "",
 
       ratingList: [1, 2, 3, 4, 5]
     }
@@ -461,30 +478,44 @@ class Review extends Component{
     const title = this.state.enteredTitle;
     const body = this.state.enteredReview;
     const rating = this.state.selectedRating;
+    let er = 0;
 
-    if(this.state.selectedMovie == -1){
+    if(this.state.selectedMovie === -1){
       this.setState({errorIndex: 0})
-      this.setState({sbEROpen: true})
+      this.setState({erMT: true})
+      er = 1
+    }else{
+      this.setState({erMT: false})
     }
-    else if(title === ""){
+
+    if(title === ""){
       this.setState({errorIndex: 1})
-      this.setState({sbEROpen: true})
-      
+      this.setState({erRT: true})
+      er = 1
+    }else{
+      this.setState({erRT: false})
     }
-    else if(body === ""){
+
+    if(body === ""){
       this.setState({errorIndex: 2})
-      this.setState({sbEROpen: true})
-      
+      this.setState({erRC: true})
+      er = 1
+    }else{
+      this.setState({erRC: false})
     }
-    else if(rating === -1){
+
+    if(rating === -1){
       this.setState({errorIndex: 3})
-      this.setState({sbEROpen: true})
+      this.setState({erRR: "Please submit a Rating"})
+      er = 1
+    }else{
+      this.setState({erRR: false})
     }
     
-
-    else{
+    if(er === 0){
       this.callApiAddReview()
       this.setState({sbOpen: true})
+
   }
 
   }
@@ -513,7 +544,7 @@ class Review extends Component{
       reviewTitle: this.state.enteredTitle,
       reviewContent: this.state.enteredReview,
       reviewScore: this.state.selectedRating,
-      movieID: this.state.selectedMovie
+      movieID: this.state.selectedMovie.id
     })
     });
     
@@ -566,20 +597,23 @@ class Review extends Component{
         justify="center">
           <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}
           alignitems="center" justify="center">
-              <MovieSelection movies={this.state.movies} handleParent={this.selectMovie} classes={classes}/>
-              <ReviewTitle handleParent={this.enterTitle} classes={classes}/>
-              <ReviewBody handleParent={this.enterReview} classes={classes}/>
-              <ReviewRating rating={this.state.ratingList} handleParent={this.selectRating} classes={classes}/>
+              <MovieSelection movies={this.state.movies} handleParent={this.selectMovie} classes={classes} errors={this.state.erMT}/>
+              <ReviewTitle handleParent={this.enterTitle} classes={classes} error={this.state.erRT}/>
+              <ReviewBody handleParent={this.enterReview} classes={classes} error={this.state.erRC}/>
+              <ReviewRating rating={this.state.ratingList} handleParent={this.selectRating} classes={classes} error={this.state.erRR}/>
               <Button variant="contained" onClick={this.submit}>Submit Review</Button>
           </FormControl>
           <Snackbar open={this.state.sbOpen}  autoHideDuration={60}>
             <Alert severity="success" onClose={this.sbHandleClose} sx={{ width: '100%' }}>
               Review Submitted Succesfully
-            </Alert>
-          </Snackbar>
-          <Snackbar open={this.state.sbEROpen} autoHideDuration={60}>
-            <Alert severity="error" onClose={this.sbERHandleClose} sx={{ width: '100%' }}>
-              {this.state.errorList[this.state.errorIndex]}
+              <br/>
+              Movie Title: {this.state.selectedMovie.name}
+              <br/>
+              Review Title: {this.state.enteredTitle}
+              <br/>
+              ReviewBody: {this.state.enteredReview}
+              <br/>
+              Rating: {this.state.selectedRating}
             </Alert>
           </Snackbar>
         </Container>
