@@ -470,7 +470,6 @@ class Edit extends Component{
         this.setState({erRC: false})
         this.setState({erRR: ""})
         this.setDefaultReview([{reviewContent: ""}])
-        this.setState({selectedRating: -1})
     }
   }
 
@@ -490,6 +489,7 @@ class Edit extends Component{
 
   sbHandleClose(event, reason) {
     this.setState({sbOpen: false});
+    this.setState({selectedRating: -1})
   };
 
   sbDeleteHandleClose = (event, reason) => {
