@@ -69,14 +69,15 @@ const styles = theme => ({
   },
 
   mainMessageContainer: {
-    marginTop: "10vh",
+    marginTop: "2vh",
     maxWidth: '100%'
   },
 
   paper: {
     overflow: "hidden",
     color: "white",
-    margin: "10"
+    margin: "10",
+    borderRadius: "20" 
   },
 
   message: {
@@ -140,7 +141,7 @@ class ContactUs extends Component {
       <Container
         justify="center"
         alignItems="center"
-        style={{ minHeight: '10vh' }}
+        style={{ minHeight: '5vh' }}
         className={classes.mainMessageContainer}
         maxWidth='sm'
       >
@@ -151,27 +152,10 @@ class ContactUs extends Component {
             align="center"
           >
             App by: Calum Hrabi
+            <br/>
+            Email: chrabi@uwaterloo.ca
           </Typography>
         </Container>
-        {/* <Grid item>
-
-        <Typography
-            variant={"h3"}
-            className={classes.mainMessage}
-            align="flex-start"
-            >
-            {this.state.mode === 0 ? (
-              <React.Fragment>
-                Welcome to Calum's IMDB App
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                Welcome back!
-              </React.Fragment>
-            )}
-        </Typography>
-
-        </Grid> */}
       </Container>
     )
 
@@ -181,6 +165,7 @@ class ContactUs extends Component {
           <CssBaseline />
           <Paper
             className={classes.paper}
+            style={{ borderRadius: 20 }}
           >
             {mainMessage}
           </Paper>
