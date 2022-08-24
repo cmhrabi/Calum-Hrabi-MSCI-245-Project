@@ -51,8 +51,7 @@ const theme = createTheme({
       justify: 'center',
       alignitems: 'center',
       color: '#42a5f5',
-      paddingTop: '5vh',
-      paddingBottom: '2vh'
+      padding: '2vh'
     },
   
     gridMessage: {
@@ -175,16 +174,6 @@ class Landing extends Component{
               align="center"
             >
                   Welcome to Calum's Movie App
-            </Typography>
-            <Typography variant={"h5"} className={classes.message}
-              align="center">
-              My app has three pages:
-              <br/>
-              Search: Allows users to search for movies and their reviews based on Movie Title, Director, and Actor
-              <br/>
-              Review: Allows users to submit custom reviews for movies
-              <br/>
-              Edit/Delete: Allows users to edit and delete their movie reviews
             </Typography>
           </div>
           </Container>

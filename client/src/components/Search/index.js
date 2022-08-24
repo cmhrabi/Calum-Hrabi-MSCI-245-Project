@@ -26,7 +26,7 @@ import NavBar from '../NavBar';
 
 //Dev mode
 //const serverURL = ""; //enable for dev mode
-const serverURL ="http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3097";
+const serverURL ="";
 
 //Deployment mode instructions
 //const serverURL = "http://ov-research-4.uwaterloo.ca:PORT"; //enable for deployed mode; Change PORT to the port number given to you;
