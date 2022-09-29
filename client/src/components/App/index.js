@@ -6,10 +6,12 @@ import {
 } from 'react-router-dom';
 import ContactUs from '../ContactUs';
 
-import Home from '../Home';
+import Review from '../Review';
 import PrivateRoute from '../Navigation/PrivateRoute.js';
-
-
+import Landing from '../Landing'
+import NavBar from '../NavBar'
+import Search from '../Search';
+import Edit from '../Edit'
 
 class App extends Component {
   constructor(props) {
@@ -33,12 +35,20 @@ class App extends Component {
   render() {
     return (
 	  <Router>
+      <NavBar/>
 	    <div>
-        <PrivateRoute exact path="/" component={Home}/>
+        <Route exact path="/" component={Landing}/>
 	    </div>
       <div>
-        <Route exact path="/" component={ContactUs}/>
-      </div>
+        <Route exact path="/reviews" component={Review}/>
+	    </div>
+      <div>
+        <Route exact path="/search" component={Search}/>
+	    </div>
+      <div>
+        <Route exact path="/mypage" component={Edit}/>
+	    </div>
+      <ContactUs/>
 	  </Router>
     );
   }

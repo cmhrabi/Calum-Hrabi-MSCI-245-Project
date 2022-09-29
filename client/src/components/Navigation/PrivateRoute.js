@@ -1,6 +1,6 @@
 import React from "react";
 import { Router, Switch, Route } from "react-router-dom";
-import Home from '../Home';
+import Review from '../Review';
 import history from './history';
 
 export default function PrivateRoute({
@@ -11,7 +11,7 @@ export default function PrivateRoute({
 
     <Router history={history}>
       <Switch>
-      <Route path="/" exact component={Home} />
+      <Route path="/" exact component={Review} />
       </Switch>
     </Router>
   );
